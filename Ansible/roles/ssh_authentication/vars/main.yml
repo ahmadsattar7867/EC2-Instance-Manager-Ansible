@@ -1,0 +1,4 @@
+---
+# vars file for ssh_authentication
+remote_user_home: "/home/ubuntu"
+authorized_keys_file: "{{ remote_user_home }}/.ssh/authorized_keys"

@@ -1,0 +1,4 @@
+---
+# defaults file for ssh_authentication
+ssh_key_path: "~/.ssh/id_rsa.pub"
+ssh_user: "ubuntu"

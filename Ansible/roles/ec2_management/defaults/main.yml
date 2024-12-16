@@ -1,0 +1,4 @@
+---
+# defaults file for ec2_management
+num_instances_needed: 3
+inventory_file: "inventory/ec2_inventory.ini"

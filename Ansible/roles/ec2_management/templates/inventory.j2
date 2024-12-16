@@ -1,0 +1,4 @@
+[ubuntu]
+{% for instance in all_instances_info.instances %}
+ubuntu@{{ instance.public_ip_address }}
+{% endfor %}

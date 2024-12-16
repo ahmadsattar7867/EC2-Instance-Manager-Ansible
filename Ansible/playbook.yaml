@@ -1,0 +1,29 @@
+---
+- name: Manage EC2 Instances
+  hosts: localhost
+  connection: local
+  roles:
+    - ec2_management
+
+# - name: Configure Webserver
+#   hosts: ubuntu
+#   become: true
+#   roles:
+#     - webServer
+
+# - name: Install and Configure Docker
+#   hosts: ubuntu
+#   become: true
+#   roles:
+#     - docker
+
+# - hosts: ubuntu
+#   become: false
+#   roles:
+#     - ssh_authentication
+
+# - name: Shutdown the ubuntu managed nodes
+#   hosts: ubuntu
+#   become: true
+#   roles:
+#     - shutdown

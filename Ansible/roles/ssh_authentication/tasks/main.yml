@@ -1,0 +1,33 @@
+- name: Verify the SSH public key exists
+  ansible.builtin.stat:
+    path: "{{ ssh_key_path }}"
+  register: ssh_key_stat
+
+- name: Generate SSH key pair if not found
+  ansible.builtin.command:
+    cmd: ssh-keygen -t rsa -b 4096 -f {{ ssh_key_path | regex_replace('.pub$', '') }} -N ""
+  when: not ssh_key_stat.stat.exists
+
+- name: Ensure the remote user's .ssh directory exists
+  ansible.builtin.file:
+    path: "{{ remote_user_home }}/.ssh"
+    state: directory
+    owner: "{{ ssh_user }}"
+    group: "{{ ssh_user }}"
+    mode: '0700'
+
+- name: Add the SSH public key to authorized_keys
+  ansible.builtin.shell:
+    cmd: ssh-copy-id -i {{ ssh_key_path }} {{ ssh_user }}@{{ inventory_hostname }}
+  register: ssh_copy_result
+  failed_when: ssh_copy_result.rc != 0 and "already installed" not in ssh_copy_result.stdout
+  ignore_errors: yes
+
+- name: Verify SSH key authentication
+  ansible.builtin.command:
+    cmd: ssh -o BatchMode=yes -o ConnectTimeout=5 {{ ssh_user }}@{{ inventory_hostname }} echo "SSH authentication successful"
+  register: auth_test
+  retries: 3
+  delay: 5
+  until: auth_test.rc == 0
+  failed_when: auth_test.rc != 0
